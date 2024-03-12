@@ -1,4 +1,5 @@
 import express from 'express';
+import UsersController from '../controllers/UsersController';
 import AppController from '../controllers/AppController';
 
 function setupRoutes(app) {
@@ -8,6 +9,9 @@ function setupRoutes(app) {
   // Routes handled by the App Controller
   router.get('/status', (req, res) => AppController.getStatus(req, res));
   router.get('/stats', (req, res) => AppController.getStats(req, res));
+
+	// Routes handled by the User Controller
+	router.post('/users', (req, res) => UsersController.postNew(req, res));
 }
 
 export default setupRoutes;

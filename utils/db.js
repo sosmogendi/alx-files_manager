@@ -16,7 +16,7 @@ class DBClient {
         this.db = null;
         return;
       }
-      
+
       this.db = client.db(DB_DATABASE);
       this.usersCollection = this.db.collection('users');
       this.filesCollection = this.db.collection('files');
@@ -46,6 +46,36 @@ class DBClient {
    */
   async nbFiles() {
     return this.filesCollection.countDocuments();
+  }
+
+  /**
+   * Retrieves a user from the users collection based on email
+   * @param {string} email - The email of the user to retrieve
+   * @return {Promise<Object|null>} The user object if found, or null if not found
+   */
+  async getUser(email) {
+    try {
+      return await this.usersCollection.findOne({ email });
+    } catch (error) {
+      console.error('Error getting user:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Creates a new user in the users collection
+   * @param {string} email - The email of the user
+   * @param {string} hashedPassword - The hashed password of the user
+   * @return {Promise<Object>} The newly created user object
+   */
+  async createUser(email, hashedPassword) {
+    try {
+      const result = await this.usersCollection.insertOne({ email, password: hashedPassword });
+      return result.ops[0];
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
   }
 }
 
